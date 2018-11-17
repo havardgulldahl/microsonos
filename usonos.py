@@ -5,7 +5,7 @@
 # 
 
 try:
-    import uurequests as requests # micropython !
+    import uuurequests as requests # micropython !
 except ImportError:
     import requests
 
@@ -48,9 +48,10 @@ SETAVTRANSPORTMSG = """
 
 def _sonostransport(ip, action, payload):
   'post the soap payload to the sonos speaker  at ip'
-  player_endpoint = '{}:1400/MediaRenderer/AVTransport/Control'.format(ip)
+  player_endpoint = 'http://{}:1400/MediaRenderer/AVTransport/Control'.format(ip)
   headers = { 'Soapaction': 'urn:schemas-upnp-org:service:AVTransport:1#{}'.format('action') ,
               'Content-Type': 'text/xml; charset=utf-8'}
+  print(player_endpoint)
   return requests.post(url=player_endpoint,
                        data=payload,
                        headers=headers)
@@ -58,8 +59,7 @@ def _sonostransport(ip, action, payload):
 
 def set_url(ip, url):
   'Queue the audio at url on the sonos speaker at ip'
-  payload = SETAVTRANSPORTMSG.format( {'id': '0',
-                                       'uri': url } )
+  payload = SETAVTRANSPORTMSG.format(id=0, uri=url)
   resp = _sonostransport(ip, 'SetAVTransportURI', payload)
 
 def play(ip):
@@ -72,5 +72,5 @@ if __name__ == '__main__':
   import sys
   ip = sys.argv[1]
   url = sys.argv[2]
-  set_url(ip, url)
-  play(ip)
+  print(set_url(ip, url))
+  print(play(ip))
