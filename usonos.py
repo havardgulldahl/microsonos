@@ -4,6 +4,12 @@
 # https://stackoverflow.com/questions/28422609/how-to-send-setavtransporturi-using-upnp-c#29129958
 # 
 
+try:
+    import uurequests as requests # micropython !
+except ImportError:
+    import requests
+
+
 PLAYMSG = """
 <?xml version="1.0" encoding="utf-8"?>
 <s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
@@ -40,3 +46,31 @@ SETAVTRANSPORTMSG = """
    </s:Body>
 </s:Envelope>"""
 
+def _sonostransport(ip, action, payload):
+  'post the soap payload to the sonos speaker  at ip'
+  player_endpoint = '{}:1400/MediaRenderer/AVTransport/Control'.format(ip)
+  headers = { 'Soapaction': 'urn:schemas-upnp-org:service:AVTransport:1#{}'.format('action') ,
+              'Content-Type': 'text/xml; charset=utf-8'}
+  return requests.post(url=player_endpoint,
+                       data=payload,
+                       headers=headers)
+
+
+def set_url(ip, url):
+  'Queue the audio at url on the sonos speaker at ip'
+  payload = SETAVTRANSPORTMSG.format( {'id': '0',
+                                       'uri': url } )
+  resp = _sonostransport(ip, 'SetAVTransportURI', payload)
+
+def play(ip):
+  'Play the speaker at ip'
+  payload = PLAYMSG
+  resp = _sonostransport(ip, 'Play', payload)
+
+
+if __name__ == '__main__':
+  import sys
+  ip = sys.argv[1]
+  url = sys.argv[2]
+  set_url(ip, url)
+  play(ip)
