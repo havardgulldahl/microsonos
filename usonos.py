@@ -5,7 +5,7 @@
 # 
 
 try:
-    import uuurequests as requests # micropython !
+    import uurequests as requests # micropython !
 except ImportError:
     import requests
 
@@ -59,6 +59,10 @@ def _sonostransport(ip, action, payload):
 
 def set_url(ip, url):
   'Queue the audio at url on the sonos speaker at ip'
+  # replace uri scheme with something that sonos preferes
+  colon = url.find(':')
+  if colon > 0:
+    url = 'x-rincon-mp3radio{0}'.format(url[colon:])
   payload = SETAVTRANSPORTMSG.format(id=0, uri=url)
   resp = _sonostransport(ip, 'SetAVTransportURI', payload)
 
