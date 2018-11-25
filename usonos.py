@@ -5,7 +5,7 @@
 # 
 
 try:
-    import uurequests as requests # micropython !
+    import urequests as requests # micropython !
 except ImportError:
     import requests
 
@@ -71,10 +71,13 @@ def play(ip):
   payload = PLAYMSG
   resp = _sonostransport(ip, 'Play', payload)
 
+def test_podcast(ip):
+  podcasturl = 'https://podkast.nrk.no/fil/dagsnytt_atten/dagsnytt_atten_2018-11-23_1825_3108.MP3'
+  set_url(ip, podcasturl)
+  play(ip)
 
 if __name__ == '__main__':
   import sys
   ip = sys.argv[1]
   url = sys.argv[2]
-  print(set_url(ip, url))
-  print(play(ip))
+  print(test_podcast(ip))
