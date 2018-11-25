@@ -40,8 +40,14 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         # Send response status code
         self.send_response(200)
 
+        # read post data
+        content_length = int(self.headers['Content-Length'])
+        x = self.rfile.read(content_length)
+        self.rfile.close()
+        self.log_message("Post data: %r", x)
+
         # Send headers
-        self.send_header('Content-type','text/html')
+        self.send_header('Content-type','text/xml; charset="utf-8"')
         self.end_headers()
 
         # Send message back to client

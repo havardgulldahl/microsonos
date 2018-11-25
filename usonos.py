@@ -4,10 +4,7 @@
 # https://stackoverflow.com/questions/28422609/how-to-send-setavtransporturi-using-upnp-c#29129958
 # 
 
-try:
-    import urequests as requests # micropython !
-except ImportError:
-    import requests
+import urequests as requests # micropython-lib
 
 
 PLAYMSG = """
@@ -65,11 +62,15 @@ def set_url(ip, url):
     url = 'x-rincon-mp3radio{0}'.format(url[colon:])
   payload = SETAVTRANSPORTMSG.format(id=0, uri=url)
   resp = _sonostransport(ip, 'SetAVTransportURI', payload)
+  print('Got response: {!r}'.format(resp.text))
+  resp.close()
 
 def play(ip):
   'Play the speaker at ip'
   payload = PLAYMSG
   resp = _sonostransport(ip, 'Play', payload)
+  print('Got response: {!r}'.format(resp.text))
+  resp.close()
 
 def test_podcast(ip):
   podcasturl = 'https://podkast.nrk.no/fil/dagsnytt_atten/dagsnytt_atten_2018-11-23_1825_3108.MP3'
