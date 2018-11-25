@@ -4,7 +4,7 @@
 # https://stackoverflow.com/questions/28422609/how-to-send-setavtransporturi-using-upnp-c#29129958
 # 
 
-import urequests as requests # micropython-lib
+import urequests # micropython-lib
 
 
 PLAYMSG = """
@@ -49,9 +49,9 @@ def _sonostransport(ip, action, payload):
   headers = { 'Soapaction': 'urn:schemas-upnp-org:service:AVTransport:1#{}'.format('action') ,
               'Content-Type': 'text/xml; charset=utf-8'}
   print(player_endpoint)
-  return requests.post(url=player_endpoint,
-                       data=payload,
-                       headers=headers)
+  return urequests.post(url=player_endpoint,
+                        data=payload,
+                        headers=headers)
 
 
 def set_url(ip, url):
